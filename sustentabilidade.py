@@ -1,78 +1,83 @@
 import streamlit as st
-import random
-import time
+import pandas as pd
+import re
 
-st.set_page_config(page_title="🎮 Construa seu Portfólio Verde", layout="wide")
-st.markdown("## 🌱 Construa seu Portfólio Verde: O Desafio da Inovação Sustentável")
-st.markdown("👩‍🔬 **Missão**: Escolher até 3 projetos de patente para investir e maximizar o impacto sustentável do seu fundo.")
-st.markdown("---")
+# -----------------------------
+# PALAVRAS-CHAVE POR SEGMENTO
+# -----------------------------
+SEGMENTOS = {
+    "Energias Alternativas": ["solar", "eólica", "fotovoltaica", "biogás", "biocombustível", "energia renovável", "célula combustível"],
+    "Transportes Sustentáveis": ["veículo elétrico", "híbrido", "célula combustível", "hidrogênio", "freios regenerativos"],
+    "Conservação de Energia": ["armazenamento de energia", "iluminação eficiente", "isolamento térmico", "recuperação de energia"],
+    "Gestão de Resíduos": ["tratamento de resíduos", "efluente", "reciclagem", "resíduos sólidos", "reuso de água", "controle de poluição"],
+    "Agricultura Sustentável": ["irrigação", "reflorestamento", "fertilizante orgânico", "pesticida alternativo", "melhoria do solo"]
+}
 
-projetos = [
-    {
-        "titulo": "🔬 Cinza vulcânica no tratamento de efluentes",
-        "resumo": "Tecnologia que usa cinza vulcânica como coagulante natural para tratar efluentes contaminados.",
-        "custo": 3, "impacto": 8, "risco": 2, "retorno": 7,
-        "ods": ["ODS 6", "ODS 12"]
-    },
-    {
-        "titulo": "🔋 Sistema híbrido solar-eólico",
-        "resumo": "Geração elétrica combinando painéis solares e turbinas eólicas em regiões remotas.",
-        "custo": 4, "impacto": 9, "risco": 4, "retorno": 8,
-        "ods": ["ODS 7", "ODS 13"]
-    },
-    {
-        "titulo": "🌿 Biofertilizante com resíduos de pescado",
-        "resumo": "Conversão de resíduos orgânicos da pesca em fertilizantes agrícolas.",
-        "custo": 2, "impacto": 7, "risco": 3, "retorno": 6,
-        "ods": ["ODS 2", "ODS 12"]
-    },
-    {
-        "titulo": "🚗 Microveículo elétrico urbano",
-        "resumo": "Veículo elétrico de baixo custo e alto desempenho aerodinâmico para cidades.",
-        "custo": 5, "impacto": 8, "risco": 5, "retorno": 9,
-        "ods": ["ODS 11", "ODS 9"]
-    },
-    {
-        "titulo": "💧 Sensor de irrigação inteligente",
-        "resumo": "Sensor que otimiza irrigação agrícola com base em umidade do solo.",
-        "custo": 3, "impacto": 6, "risco": 1, "retorno": 5,
-        "ods": ["ODS 2", "ODS 6"]
-    }
-]
+ODS_MAPEAMENTO = {
+    "Energias Alternativas": [7, 13],
+    "Transportes Sustentáveis": [9, 11],
+    "Conservação de Energia": [7, 12],
+    "Gestão de Resíduos": [6, 12, 13],
+    "Agricultura Sustentável": [2, 12, 15]
+}
 
-st.subheader("📋 Projetos disponíveis")
-selecionados = st.multiselect("Escolha até 3 para investir:", options=[p["titulo"] for p in projetos], max_selections=3)
+# -----------------------------
+# FUNÇÕES PRINCIPAIS
+# -----------------------------
+def classificar_segmento(texto):
+    texto = texto.lower()
+    resultado = {}
+    for segmento, palavras in SEGMENTOS.items():
+        score = sum(1 for palavra in palavras if re.search(rf"\\b{re.escape(palavra)}\\b", texto))
+        if score > 0:
+            resultado[segmento] = score
+    return resultado
 
-if st.button("🚀 Lançar Investimento"):
-    if not selecionados:
-        st.warning("⚠️ Selecione ao menos um projeto!")
+def classificar_sustentabilidade(score_dict):
+    if not score_dict:
+        return "Indefinido", [], []
+    segmento_principal = max(score_dict, key=score_dict.get)
+    pontuacao_total = sum(score_dict.values())
+    if pontuacao_total >= 3:
+        return "Sustentável (Alta Confiança)", [segmento_principal], ODS_MAPEAMENTO[segmento_principal]
+    elif pontuacao_total == 2:
+        return "Potencialmente Sustentável", [segmento_principal], ODS_MAPEAMENTO[segmento_principal]
     else:
-        with st.spinner("🔍 Avaliando seu portfólio..."):
-            time.sleep(2)
+        return "Indefinido", [], []
 
-        total_impacto = sum(p["impacto"] for p in projetos if p["titulo"] in selecionados)
-        total_risco = sum(p["risco"] for p in projetos if p["titulo"] in selecionados)
-        total_retorno = sum(p["retorno"] for p in projetos if p["titulo"] in selecionados)
-        score = (total_impacto * 2 + total_retorno) - (total_risco * 1.5)
+# -----------------------------
+# INTERFACE STREAMLIT
+# -----------------------------
+st.set_page_config(page_title="Classificador de Patentes Verdes", layout="wide")
+st.title("🌱 Classificador de Sustentabilidade Tecnológica em Pedidos de Patente")
+st.markdown("""
+Este protótipo analisa o texto técnico de um pedido de patente e indica seu potencial de alinhamento com a sustentabilidade, 
+com base no inventário da OMPI e ODS associados.
+""")
 
-        if score >= 35:
-            feedback = "🏆 **Inovador Verde** — Seu portfólio é exemplar!"
-        elif score >= 28:
-            feedback = "🥈 **Inovador Promissor** — Bons projetos com impacto!"
+# Entrada do texto
+txt_input = st.text_area("📄 Insira o texto técnico ou resumo do pedido de patente:", height=300)
+
+if st.button("🔍 Analisar Texto"):
+    if not txt_input.strip():
+        st.warning("Por favor, insira um texto válido.")
+    else:
+        with st.spinner("Analisando..."):
+            scores = classificar_segmento(txt_input)
+            resultado, segmentos, ods = classificar_sustentabilidade(scores)
+
+        st.subheader("🔎 Resultado da Classificação")
+        st.write(f"**Classificação:** {resultado}")
+        if segmentos:
+            st.write(f"**Segmento Principal:** {segmentos[0]}")
+            st.write(f"**ODS Relacionados:** {', '.join(['ODS ' + str(o) for o in ods])}")
+
+        st.subheader("📊 Pontuação por Segmento")
+        if scores:
+            df = pd.DataFrame(list(scores.items()), columns=["Segmento", "Pontuação"])
+            st.dataframe(df, use_container_width=True)
         else:
-            feedback = "🔍 **Risco alto detectado** — Reavalie suas escolhas."
+            st.info("Nenhum termo sustentável detectado no texto.")
 
-        st.success(feedback)
-        st.metric("🎯 Score Final", f"{score:.1f}")
-        st.progress(min(score / 50, 1.0))
-
-        st.markdown("### 📊 Detalhes do Portfólio:")
-        st.markdown(f"- Impacto Ambiental Total: **{total_impacto}**")
-        st.markdown(f"- Risco Técnico Total: **{total_risco}**")
-        st.markdown(f"- Retorno Tecnológico: **{total_retorno}**")
-
-        ods_final = set()
-        for p in projetos:
-            if p["titulo"] in selecionados:
-                ods_final.update(p["ods"])
-        st.markdown(f"- ODS Atendidos: {', '.join(sorted(ods_final))}")
+st.markdown("---")
+st.caption("Protótipo acadêmico - Desenvolvido para avaliação preliminar de sustentabilidade em PI")
