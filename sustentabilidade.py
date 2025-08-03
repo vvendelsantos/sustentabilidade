@@ -1,123 +1,96 @@
 import streamlit as st
-import pandas as pd
+import random
 
-# --------------------
-# Configurações do Jogo
-# --------------------
-st.set_page_config(
-    page_title="Gestor de Patentes Verdes",
-    page_icon="🌱",
-    layout="wide",
-)
+st.set_page_config(page_title="Construa seu Portfólio Verde", layout="wide")
+st.title("🌱 Construa seu Portfólio Verde")
 
-# --------------------
-# Inicialização de Estado (Estado da Sessão)
-# --------------------
-# Usamos o `st.session_state` para armazenar variáveis entre as rodadas.
-# Isso garante que o orçamento e os indicadores não resetem toda vez que a página é atualizada.
-if "budget" not in st.session_state:
-    st.session_state.budget = 1000  # Orçamento inicial
-if "patents_registered" not in st.session_state:
-    st.session_state.patents_registered = []
-if "sustainability_score" not in st.session_state:
-    st.session_state.sustainability_score = 0
-if "financial_return" not in st.session_state:
-    st.session_state.financial_return = 0
-
-# --------------------
-# Dados do Jogo (Patentes)
-# --------------------
-# Usamos um DataFrame do Pandas para armazenar as informações das patentes.
-patents = {
-    "name": [
-        "Filtro de Água de Carbono Bio-Ativo",
-        "Processo de Reciclagem de Plástico Ultrassônico",
-        "Bateria de Íon de Sódio para Veículos",
-        "Algoritmo de Otimização de Logística",
-        "Material de Embalagem Biodegradável",
-        "Cabo de Fibra Ótica de Alta Velocidade",
-        "Fertilizante Orgânico de Liberação Lenta",
-    ],
-    "cost": [150, 200, 300, 100, 120, 250, 180],
-    "financial_impact": [200, 250, 400, 150, 160, 350, 220],
-    "sustainability_impact": [10, 8, 9, 3, 7, 2, 9],
-}
-
-patents_df = pd.DataFrame(patents)
-
-# --------------------
-# Lógica do Jogo
-# --------------------
-def register_patent(patent_name):
-    """Função que registra uma patente, atualizando o estado do jogo."""
-    patent_info = patents_df[patents_df["name"] == patent_name].iloc[0]
-    
-    if st.session_state.budget >= patent_info["cost"]:
-        st.session_state.budget -= patent_info["cost"]
-        st.session_state.financial_return += patent_info["financial_impact"]
-        st.session_state.sustainability_score += patent_info["sustainability_impact"]
-        st.session_state.patents_registered.append(patent_name)
-        st.success(f"Patente '{patent_name}' registrada com sucesso!")
-    else:
-        st.error("Orçamento insuficiente para registrar esta patente.")
-
-# Função para reiniciar o jogo
-def reset_game():
-    st.session_state.budget = 1000
-    st.session_state.patents_registered = []
-    st.session_state.sustainability_score = 0
-    st.session_state.financial_return = 0
-    st.experimental_rerun()
-
-
-# --------------------
-# Interface do Usuário (UI)
-# --------------------
-st.title("🌱 Gestor de Patentes Verdes")
 st.markdown("""
-Bem-vindo ao simulador de inovação! Seu desafio é equilibrar o **retorno financeiro** e o **impacto sustentável** da sua empresa, decidindo quais patentes registrar com um orçamento limitado.
+Você é gestor de um fundo de inovação sustentável.  
+Selecione **até 3 projetos** de patente nos quais deseja investir.  
+Seu objetivo é maximizar o impacto ambiental e retorno tecnológico, com risco mínimo.
 """)
 
-st.sidebar.title("Informações do Jogo")
-st.sidebar.metric("Orçamento", f"R$ {st.session_state.budget}")
-st.sidebar.metric("Retorno Financeiro Total", f"R$ {st.session_state.financial_return}")
-st.sidebar.metric("Pontuação de Sustentabilidade", st.session_state.sustainability_score)
-
-# Botão para reiniciar o jogo na barra lateral
-st.sidebar.button("Reiniciar Jogo", on_click=reset_game)
-
-st.subheader("Patentes Disponíveis")
-
-# Mostra as patentes em um DataFrame
-st.dataframe(patents_df, use_container_width=True)
-
-# Cria os botões para registrar patentes
-st.markdown("---")
-st.subheader("Tome sua decisão:")
-patents_to_register = [p for p in patents_df["name"] if p not in st.session_state.patents_registered]
-
-cols = st.columns(len(patents_to_register))
-for i, patent_name in enumerate(patents_to_register):
-    with cols[i]:
-        st.button(f"Registrar: {patent_name}", key=patent_name, on_click=register_patent, args=(patent_name,))
-
-st.markdown("---")
-st.subheader("Resultados do Jogo")
-
-# Gráfico de barras comparando os indicadores
-data_for_chart = pd.DataFrame(
+# Projetos simulados
+projetos = [
     {
-        "Indicador": ["Retorno Financeiro", "Pontuação de Sustentabilidade"],
-        "Valor": [st.session_state.financial_return, st.session_state.sustainability_score],
+        "titulo": "Tratamento de efluentes com cinza vulcânica",
+        "resumo": "Uso de cinza vulcânica como coagulante natural para remover poluentes de efluentes industriais.",
+        "custo": 3,
+        "impacto": 8,
+        "risco": 2,
+        "retorno": 7,
+        "ods": ["ODS 6", "ODS 12"]
+    },
+    {
+        "titulo": "Sistema híbrido solar-eólico para comunidades isoladas",
+        "resumo": "Tecnologia de geração elétrica off-grid combinando energia solar e eólica.",
+        "custo": 4,
+        "impacto": 9,
+        "risco": 4,
+        "retorno": 8,
+        "ods": ["ODS 7", "ODS 13"]
+    },
+    {
+        "titulo": "Biofertilizante feito com resíduos de pescado",
+        "resumo": "Produção de fertilizantes orgânicos a partir de resíduos da indústria pesqueira.",
+        "custo": 2,
+        "impacto": 7,
+        "risco": 3,
+        "retorno": 6,
+        "ods": ["ODS 2", "ODS 12"]
+    },
+    {
+        "titulo": "Veículo urbano leve elétrico com baixo arrasto aerodinâmico",
+        "resumo": "Projeto de microveículo elétrico com design eficiente para mobilidade urbana.",
+        "custo": 5,
+        "impacto": 8,
+        "risco": 5,
+        "retorno": 9,
+        "ods": ["ODS 11", "ODS 9"]
+    },
+    {
+        "titulo": "Sensor inteligente para controle de irrigação",
+        "resumo": "Sensor que mede a umidade do solo e reduz desperdício de água em lavouras.",
+        "custo": 3,
+        "impacto": 6,
+        "risco": 1,
+        "retorno": 5,
+        "ods": ["ODS 2", "ODS 6"]
     }
-)
-st.bar_chart(data_for_chart, x="Indicador", y="Valor")
+]
 
-# Exibe as patentes já registradas
-st.markdown("---")
-if st.session_state.patents_registered:
-    st.subheader("Patentes Registradas:")
-    for patent in st.session_state.patents_registered:
-        st.success(f"- {patent}")
-else:
-    st.info("Nenhuma patente registrada ainda.")
+# Seleção de projetos
+selecionados = st.multiselect(
+    "Escolha até 3 pedidos para investir:",
+    options=[p["titulo"] for p in projetos],
+    max_selections=3
+)
+
+# Botão de avaliação
+if st.button("💡 Avaliar Portfólio") and selecionados:
+    total_custo = 0
+    total_impacto = 0
+    total_risco = 0
+    total_retorno = 0
+    ods_totais = set()
+
+    for p in projetos:
+        if p["titulo"] in selecionados:
+            total_custo += p["custo"]
+            total_impacto += p["impacto"]
+            total_risco += p["risco"]
+            total_retorno += p["retorno"]
+            ods_totais.update(p["ods"])
+
+    # Score final (pode ajustar fórmula depois)
+    score = (total_impacto * 2 + total_retorno) - (total_risco * 1.5)
+
+    st.success(f"🏆 Seu Portfólio Sustentável obteve um score final de: **{score:.1f}**")
+    st.markdown(f"- **Custo total**: {total_custo}")
+    st.markdown(f"- **Impacto ambiental total**: {total_impacto}")
+    st.markdown(f"- **Risco médio**: {total_risco / len(selecionados):.1f}")
+    st.markdown(f"- **Retorno estimado**: {total_retorno}")
+    st.markdown(f"- **ODS atendidos**: {', '.join(sorted(ods_totais))}")
+
+elif len(selecionados) == 0:
+    st.info("Selecione pelo menos um projeto.")
