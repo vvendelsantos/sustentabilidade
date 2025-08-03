@@ -1,104 +1,93 @@
+# app.py
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+import re
 
-# ---------------------------
-# 1. Título e Introdução
-# ---------------------------
-st.title("🔍 Classificador Didático de Patentes Sustentáveis")
+st.set_page_config(page_title="Classificador de Patentes Verdes", layout="wide")
+st.title("🌱 Classificador de Sustentabilidade de Pedidos de Patente")
+
 st.markdown("""
-Este protótipo educacional mostra como é possível utilizar **indicadores simples** para explorar a relação entre patentes tecnológicas e **sustentabilidade**, com base em palavras-chave e classificações IPC.
+Este aplicativo visa apoiar Núcleos de Inovação Tecnológica (NITs) na identificação de pedidos de patente com potencial classificação como **patente verde**, com base em critérios técnicos e temáticos do inventário da OMPI.
 """)
 
-# ---------------------------
-# 2. Dados simulados
-# ---------------------------
-dados = pd.DataFrame({
-    'Título': [
-        'Sistema de geração de energia solar com alta eficiência',
-        'Método de produção de plástico biodegradável a partir de algas',
-        'Aquecedor solar compacto para residências urbanas',
-        'Processo de dessalinização de água por osmose reversa',
-        'Sistema híbrido de reaproveitamento de resíduos eletrônicos'
-    ],
-    'Resumo': [
-        'Painel solar integrado com otimização automática.',
-        'Uso de algas para polímeros sustentáveis.',
-        'Tecnologia limpa para aquecimento doméstico.',
-        'Solução de acesso à água potável usando energia limpa.',
-        'Tecnologia circular para resíduos de eletrônicos.'
-    ],
-    'IPC': ['Y02E', 'C08L', 'F24J', 'C02F', 'H01M'],
-    'Ano': [2022, 2021, 2020, 2023, 2024]
-})
+# ========================
+# DEFINIÇÕES DE PALAVRAS-CHAVE E PESOS
+# ========================
+segmentos = {
+    "Energias alternativas": {
+        "palavras": ["fotovoltaic", "energia solar", "solar térmica", "biocombustível", "bioetanol", "biodiesel", "célula combustível", "energia eólica", "biogás", "energia hidráulica"],
+        "peso": 2
+    },
+    "Transportes sustentáveis": {
+        "palavras": ["veículo elétrico", "híbrido", "célula combustível", "propulsão solar", "freio regenerativo"],
+        "peso": 1
+    },
+    "Conservação de energia": {
+        "palavras": ["armazenamento de energia", "isolamento térmico", "iluminação eficiente", "medição de energia"],
+        "peso": 1
+    },
+    "Gerenciamento de resíduos": {
+        "palavras": ["reciclagem", "tratamento de resíduos", "gases residuais", "fertilizante", "esgoto", "aterro", "resíduo industrial"],
+        "peso": 1
+    },
+    "Agricultura sustentável": {
+        "palavras": ["irrigação", "fertilizante orgânico", "controle biológico", "reflorestamento", "pesticida alternativo"],
+        "peso": 1
+    },
+}
 
-# ---------------------------
-# 3. Lista de palavras-chave sustentáveis
-# ---------------------------
-keywords_verdes = ['solar', 'energia', 'biodegradável', 'algas', 'limpa', 'reciclagem', 'resíduos', 'sustentável', 'água', 'potável', 'renovável']
-ipcs_verdes = ['Y02', 'C02', 'F24J']  # IPCs ambientais
+# ========================
+# FUNÇÕES
+# ========================
+def detectar_segmentos(texto):
+    texto = texto.lower()
+    resultados = []
+    for segmento, dados in segmentos.items():
+        for palavra in dados['palavras']:
+            if re.search(rf"\\b{palavra}\\b", texto):
+                resultados.append(segmento)
+                break
+    return list(set(resultados))
 
-# ---------------------------
-# 4. Função de pontuação
-# ---------------------------
-def classificar_patente(titulo, resumo, ipc):
-    score = 0
-    texto = (titulo + ' ' + resumo).lower()
-    
-    score += sum(1 for palavra in keywords_verdes if palavra in texto)
-    score += any(ipc.startswith(code) for code in ipcs_verdes) * 2
+def pontuar_patente(texto, segmentos_detectados):
+    pontuacao = 0
+    for s in segmentos_detectados:
+        pontuacao += segmentos[s]['peso']
+    # Peso adicional por palavras de impacto
+    impacto_extra = ["baixo carbono", "ods", "sustentabilidade", "economia circular"]
+    if any(palavra in texto.lower() for palavra in impacto_extra):
+        pontuacao += 1
+    return pontuacao
 
-    if score >= 6:
-        return 'Alta', score
-    elif score >= 3:
-        return 'Média', score
-    else:
-        return 'Baixa', score
+# ========================
+# INTERFACE DO APP
+# ========================
+st.subheader("1. Carregue ou cole o conteúdo do pedido de patente")
 
-# ---------------------------
-# 5. Aplicando classificação
-# ---------------------------
-resultados = []
-for i, row in dados.iterrows():
-    classe, score = classificar_patente(row['Título'], row['Resumo'], row['IPC'])
-    resultados.append((classe, score))
+opcao = st.radio("Escolha a forma de entrada:", ["Upload de CSV", "Texto manual"])
 
-dados[['Classificação Sustentável', 'Score']] = resultados
+if opcao == "Upload de CSV":
+    arquivo = st.file_uploader("Envie um arquivo CSV com a coluna 'resumo'", type=["csv"])
+    if arquivo:
+        df = pd.read_csv(arquivo)
+        if 'resumo' not in df.columns:
+            st.error("O arquivo precisa ter uma coluna chamada 'resumo'.")
+        else:
+            with st.spinner("Classificando patentes..."):
+                df['segmentos'] = df['resumo'].apply(detectar_segmentos)
+                df['pontuacao'] = df.apply(lambda row: pontuar_patente(row['resumo'], row['segmentos']), axis=1)
+                df['classificacao'] = df['pontuacao'].apply(lambda x: "Provável patente verde" if x >= 3 else "Indefinido")
+            st.success("Análise concluída.")
+            st.dataframe(df)
+            st.download_button("📥 Baixar resultados", data=df.to_csv(index=False), file_name="resultado_patentes.csv")
 
-# ---------------------------
-# 6. Exibindo tabela
-# ---------------------------
-st.subheader("📄 Resultados das Patentes Avaliadas")
-st.dataframe(dados)
+elif opcao == "Texto manual":
+    texto = st.text_area("Cole o resumo técnico do pedido de patente")
+    if st.button("Analisar resumo"):
+        segmentos_detectados = detectar_segmentos(texto)
+        score = pontuar_patente(texto, segmentos_detectados)
+        classificacao = "Provável patente verde" if score >= 3 else "Indefinido"
 
-# ---------------------------
-# 7. Gráfico de barras
-# ---------------------------
-st.subheader("📊 Distribuição por Nível de Sustentabilidade")
-fig, ax = plt.subplots()
-dados['Classificação Sustentável'].value_counts().plot(kind='bar', color=['green', 'orange', 'red'], ax=ax)
-plt.xlabel("Classificação")
-plt.ylabel("Número de Patentes")
-st.pyplot(fig)
-
-# ---------------------------
-# 8. Nuvem de palavras
-# ---------------------------
-st.subheader("☁️ Palavras mais frequentes (Resumos)")
-texto_total = ' '.join(dados['Resumo'].values).lower()
-wordcloud = WordCloud(width=800, height=400, background_color='white').generate(texto_total)
-fig_wc, ax_wc = plt.subplots()
-ax_wc.imshow(wordcloud, interpolation='bilinear')
-ax_wc.axis('off')
-st.pyplot(fig_wc)
-
-# ---------------------------
-# 9. Download dos dados
-# ---------------------------
-st.download_button(
-    label="⬇️ Baixar Resultados em CSV",
-    data=dados.to_csv(index=False).encode('utf-8'),
-    file_name='resultados_patentes_sustentaveis.csv',
-    mime='text/csv'
-)
+        st.markdown(f"**Segmentos detectados:** {', '.join(segmentos_detectados) if segmentos_detectados else 'Nenhum'}")
+        st.markdown(f"**Pontuação:** {score}")
+        st.markdown(f"**Classificação:** :green[{classificacao}]" if classificacao.startswith("Provável") else f"**Classificação:** :orange[{classificacao}]")
