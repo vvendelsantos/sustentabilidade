@@ -1,5 +1,3 @@
-# Arquivo: streamlit_sempi.py
-
 import streamlit as st
 from utils import formatar_nota_br, calcular_media_ponderada
 from templates import (
