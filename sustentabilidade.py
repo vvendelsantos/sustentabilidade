@@ -57,31 +57,35 @@ df_anos = pd.DataFrame(data_anos)
 # =================================================================================
 # 4. Criação dos Gráficos com Plotly Express
 # =================================================================================
+# Os gráficos agora têm fundo branco e usam a cor #71B1B3.
 
 # Gráfico de barras para Países
 fig_paises = px.bar(df_paises,
                     x='País',
                     y='Contagem',
                     title='Distribuição por País',
-                    color_discrete_sequence=px.colors.qualitative.Plotly)
+                    color_discrete_sequence=['#71B1B3'])
+fig_paises.update_layout(paper_bgcolor='white', plot_bgcolor='white')
 
-# Gráfico de barras para Titulares (limitar o nome para melhor visualização)
-# Adiciona um hover_name para mostrar o nome completo no tooltip
+# Gráfico de barras para Titulares
 fig_titulares = px.bar(df_titulares,
                        x='Titular',
                        y='Contagem',
                        title='Distribuição por Titular',
-                       color_discrete_sequence=px.colors.qualitative.Plotly)
+                       color_discrete_sequence=['#71B1B3'])
 fig_titulares.update_traces(text=df_titulares['Titular'])
 fig_titulares.update_layout(xaxis_title='Titular',
-                            showlegend=False)
+                            showlegend=False,
+                            paper_bgcolor='white',
+                            plot_bgcolor='white')
 
 # Gráfico de barras para Códigos IPC
 fig_ipc = px.bar(df_ipc,
                  x='Código IPC',
                  y='Contagem',
                  title='Distribuição por Código IPC',
-                 color_discrete_sequence=px.colors.qualitative.Plotly)
+                 color_discrete_sequence=['#71B1B3'])
+fig_ipc.update_layout(paper_bgcolor='white', plot_bgcolor='white')
 
 # Gráfico de linha para Anos (evolução ao longo do tempo)
 fig_anos = px.line(df_anos,
@@ -89,7 +93,9 @@ fig_anos = px.line(df_anos,
                    y='Contagem',
                    title='Evolução ao Longo do Tempo (Anos)',
                    markers=True)
-fig_anos.update_traces(line_color='rgb(102, 194, 165)')
+fig_anos.update_traces(line_color='#71B1B3')
+fig_anos.update_layout(paper_bgcolor='white', plot_bgcolor='white')
+
 
 # =================================================================================
 # 5. Criar o layout do painel (Dashboard)
