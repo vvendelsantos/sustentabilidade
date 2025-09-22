@@ -7,8 +7,6 @@ st.title("Gerador de HTML - Avaliação Final SEMPI")
 # --- Campos do formulário ---
 st.header("Informações principais")
 resultado = st.selectbox("Resultado do artigo:", ["APROVADO", "REPROVADO"])
-revista1 = st.text_input("Nome da primeira revista parceira:", "Revista Meio Ambiente e Sustentabilidade")
-revista2 = st.text_input("Nome da segunda revista parceira:", "Revista Sustentabilidade e Sociedade")
 revista_final = st.text_input("Nome da revista para substituir 'nas revistas parceiras':", "")
 link_revista = st.text_input("Link de cadastro no sistema da revista:", 
                              "https://www.revistasuninter.com/revistameioambiente/index.php/meioAmbiente/login")
@@ -41,7 +39,7 @@ for criterio in criterios:
 
 st.header("Comentário ao editor")
 codigo_permissao = st.text_input("Código de permissão:", "XXXXX")
-revista_editor = st.selectbox("Selecione a revista para o comentário ao editor:", [revista1, revista2])
+revista_editor = st.text_input("Nome da revista para o comentário ao editor:", "")
 
 # --- Botão para gerar HTML ---
 if st.button("Gerar HTML"):
@@ -78,7 +76,7 @@ td:first-child {{ text-align: justify; }}
 <p>Prezados(as) autores(as),</p>
 <p>É com satisfação que comunicamos o <strong>resultado final</strong> da avaliação do artigo submetido à 
 VII Semana Acadêmica da Propriedade Intelectual (SEMPI). 
-Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação {publicacao_texto}.</p>
+Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação <strong>{publicacao_texto}</strong>.</p>
 """
 
     # --- Tabela de avaliação ---
@@ -105,7 +103,7 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
 <li>No campo "Comentários ao editor", insira o seguinte texto:<br><br>
 <p style="text-align: justify;">
 <em>
-Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico e recebeu autorização para submissão na {revista_editor} em 26/09/2025, com o código de permissão <strong>{codigo_permissao}</strong>.
+Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico e recebeu autorização para submissão na <strong>{revista_editor}</strong> em 26/09/2025, com o código de permissão <strong>{codigo_permissao}</strong>.
 </em>
 </p>
 <br>
