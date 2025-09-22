@@ -14,7 +14,7 @@ link_revista = st.text_input("Link de cadastro no sistema da revista:",
 
 st.header("Avaliação dos critérios")
 criterios = [
-    "EMBASAMENTO TEÓRICO",
+    "Embasamento teórico",
     "Metodologia",
     "Resultados e discussão",
     "Adequação ao template",
@@ -25,7 +25,7 @@ criterios = [
 
 # Descrições detalhadas
 descricao_criterios = {
-    "EMBASAMENTO TEÓRICO": "O artigo apresenta embasamento teórico adequado e atualizado, apoiando os argumentos e hipóteses.",
+    "Embasamento teórico": "O artigo apresenta embasamento teórico adequado e atualizado, apoiando os argumentos e hipóteses.",
     "Metodologia": "Os métodos utilizados estão descritos de forma clara, confiável e replicável.",
     "Resultados e discussão": "Os resultados são apresentados de forma organizada e a discussão é coerente com os objetivos do estudo.",
     "Adequação ao template": "O artigo segue corretamente o template exigido pela revista parceira.",
@@ -42,12 +42,6 @@ st.header("Comentário ao editor")
 codigo_permissao = st.text_input("Código de permissão:", "XXXXX")
 revista_editor = st.selectbox("Selecione a revista para o comentário ao editor:", [revista1, revista2])
 
-st.header("Avaliação qualitativa do artigo")
-avaliacao_qualitativa = st.selectbox(
-    "Após avaliação, como considera a contribuição para a comunidade técnico-científica deste artigo?",
-    ["EXCEPCIONAL", "MUITO BOM", "BOM", "REGULAR", "SOFRÍVEL", "FRACO", "MUITO FRACO"]
-)
-
 # --- Botão para gerar HTML ---
 if st.button("Gerar HTML"):
     html = f"""<!doctype html>
@@ -61,16 +55,20 @@ body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background
 .container {{ max-width: 900px; margin: 0 auto; background-color: #ffffff; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }}
 .header {{ background-color: #c6e7c3; padding: 20px 30px; border-bottom: 3px solid #94d194; text-align: center; }}
 .header h1 {{ margin: 0; font-size: 22px; color: #0f3c1d; }}
-.content {{ padding: 30px; line-height: 1.65; text-align: justify; }}
+.content {{ padding: 30px; line-height: 1.65; }}
 table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
 th, td {{ border: 1px solid #c6e7c3; padding: 12px; text-align: center; }}
 th {{ background-color: #dff4df; color: #0f3c1d; font-weight: bold; }}
 td:first-child, td:nth-child(2) {{ text-align: left; }}
+.sim {{ color: green; font-weight: bold; font-size: 18px; }}
+.parcial {{ color: orange; font-weight: bold; font-size: 18px; }}
+.nao {{ color: red; font-weight: bold; font-size: 18px; }}
 .recommendation {{ background-color: #dff4df; border: 2px solid #94d194; border-radius: 12px; text-align: center; padding: 20px; margin-top: 30px; font-size: 20px; font-weight: bold; color: #0f3c1d; }}
 .instructions {{ margin-top: 30px; background-color: #f5faf5; border-left: 4px solid #94d194; padding: 20px; }}
 .instructions h2 {{ font-size: 18px; color: #0f3c1d; margin-top: 0; }}
 .instructions ol {{ padding-left: 20px; }}
-.highlight-note {{ display: block; margin-bottom: 15px; text-align: justify; }}
+.highlight-note {{ display: block; margin-bottom: 15px; }}
+.footer-text {{ margin-top: 20px; font-style: italic; }}
 footer {{ padding: 20px 30px; text-align: center; font-size: 13px; color: #5a795f; }}
 </style>
 </head>
@@ -86,22 +84,16 @@ VII Semana Acadêmica da Propriedade Intelectual (SEMPI).
 Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação {"nas revistas parceiras" if resultado=="APROVADO" else "o resumo expandido será publicado nos anais do evento"}.</p>
 """
 
-    # --- Tabela de critérios com fundo colorido ---
+    # --- Tabela de critérios com cores ---
     html += "<table><thead><tr><th>Critério</th><th>Afirmação Avaliada</th><th>Sim</th><th>Parcial</th><th>Não</th></tr></thead><tbody>"
     for criterio in criterios:
-        sim_selected = avaliacoes[criterio]=='Sim'
-        parcial_selected = avaliacoes[criterio]=='Parcial'
-        nao_selected = avaliacoes[criterio]=='Não'
-
-        sim_html = f"<td style='background-color:{'#a0e7a0' if sim_selected else '#f0fff0'}; color: green; font-weight:bold; font-size:18px; text-align:center;'>{'☑' if sim_selected else '☐'}</td>"
-        parcial_html = f"<td style='background-color:{'#ffd580' if parcial_selected else '#fffaf0'}; color: orange; font-weight:bold; font-size:18px; text-align:center;'>{'☑' if parcial_selected else '☐'}</td>"
-        nao_html = f"<td style='background-color:{'#ff9999' if nao_selected else '#fff0f0'}; color: red; font-weight:bold; font-size:18px; text-align:center;'>{'☑' if nao_selected else '☐'}</td>"
-
-        html += f"<tr><td>{criterio}</td><td>{descricao_criterios[criterio]}</td>{sim_html}{parcial_html}{nao_html}</tr>"
+        html += f"<tr><td>{criterio}</td><td>{descricao_criterios[criterio]}</td>"
+        html += f"<td class='sim'>{'☑' if avaliacoes[criterio]=='Sim' else '☐'}</td>"
+        html += f"<td class='parcial'>{'☑' if avaliacoes[criterio]=='Parcial' else '☐'}</td>"
+        html += f"<td class='nao'>{'☑' if avaliacoes[criterio]=='Não' else '☐'}</td></tr>"
     html += "</tbody></table>"
 
-    # --- Avaliação qualitativa ---
-    html += f'<div class="recommendation">Após avaliação, como considera a contribuição para a comunidade técnico-científica deste artigo? <strong>{avaliacao_qualitativa}</strong></div>'
+    html += f'<div class="recommendation">Recomendação Final: <strong>{resultado}</strong></div>'
 
     # --- Orientações finais apenas se aprovado ---
     if resultado=="APROVADO":
@@ -114,9 +106,12 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
 <li>Cadastre-se no sistema da revista, caso ainda não o tenha feito: <a href="{link_revista}" target="_blank">{link_revista}</a></li>
 <li>Acesse o menu de submissão. Lembre-se de cadastrar todos os autores no sistema.</li>
 <li>No campo "Comentários ao editor", insira o seguinte texto:<br><br>
-<em class="highlight-note">
+<p style="text-align: justify;">
+<em>
 Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico e recebeu autorização para submissão na {revista_editor} em 26/09/2025, com o código de permissão <strong>{codigo_permissao}</strong>.
 </em>
+</p>
+<br>
 </li>
 <li>Não é necessário anexar o relatório de similaridade (plágio); a Comissão Organizadora se encarregará de enviá-lo diretamente ao editor-chefe.</li>
 <li>Revise todos os dados antes de finalizar a submissão. A Comissão Organizadora não se responsabiliza por uma possível rejeição do artigo por parte do editor-chefe.</li>
@@ -124,7 +119,7 @@ Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da 
 </div>
 """
 
-    html += f"""
+    html += """
 <footer>
 Comissão Organizadora – VII SEMPI<br>
 📩 submissoes.sempi@gmail.com
