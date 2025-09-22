@@ -36,7 +36,7 @@ descricao_criterios = {
 
 avaliacoes = {}
 for criterio in criterios:
-    avaliacoes[criterio] = st.radio(f"{criterio}:", ["Sim", "Parcial", "Não"], index=0, horizontal=True)
+    avaliacoes[criterio] = st.radio(f"{criterio}:", ["Sim", "Parcialmente", "Não"], index=0, horizontal=True)
 
 st.header("Comentário ao editor")
 codigo_permissao = st.text_input("Código de permissão:", "XXXXX")
@@ -55,21 +55,15 @@ body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background
 .container {{ max-width: 900px; margin: 0 auto; background-color: #ffffff; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }}
 .header {{ background-color: #c6e7c3; padding: 20px 30px; border-bottom: 3px solid #94d194; text-align: center; }}
 .header h1 {{ margin: 0; font-size: 22px; color: #0f3c1d; }}
-.content {{ padding: 30px; line-height: 1.65; }}
+.content {{ padding: 30px; line-height: 1.65; text-align: justify; }}
 table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
 th, td {{ border: 1px solid #c6e7c3; padding: 12px; text-align: center; }}
 th {{ background-color: #dff4df; color: #0f3c1d; font-weight: bold; }}
-td:first-child, td:nth-child(2) {{ text-align: left; }}
-.sim {{ color: green; font-weight: bold; font-size: 18px; }}
-.parcial {{ color: orange; font-weight: bold; font-size: 18px; }}
-.nao {{ color: red; font-weight: bold; font-size: 18px; }}
+td:first-child {{ text-align: justify; }}
 .recommendation {{ background-color: #dff4df; border: 2px solid #94d194; border-radius: 12px; text-align: center; padding: 20px; margin-top: 30px; font-size: 20px; font-weight: bold; color: #0f3c1d; }}
-.instructions {{ margin-top: 30px; background-color: #f5faf5; border-left: 4px solid #94d194; padding: 20px; }}
+.instructions {{ margin-top: 30px; background-color: #f5faf5; border-left: 4px solid #94d194; padding: 20px; text-align: left; }}
 .instructions h2 {{ font-size: 18px; color: #0f3c1d; margin-top: 0; }}
-.instructions ol {{ padding-left: 20px; }}
-.highlight-note {{ display: block; margin-bottom: 15px; }}
-.footer-text {{ margin-top: 20px; font-style: italic; }}
-footer {{ padding: 20px 30px; text-align: center; font-size: 13px; color: #5a795f; }}
+.instructions ol {{ padding-left: 20px; text-align: left; }}
 </style>
 </head>
 <body>
@@ -84,18 +78,18 @@ VII Semana Acadêmica da Propriedade Intelectual (SEMPI).
 Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação {"nas revistas parceiras" if resultado=="APROVADO" else "o resumo expandido será publicado nos anais do evento"}.</p>
 """
 
-    # --- Tabela de critérios com cores ---
-    html += "<table><thead><tr><th>Critério</th><th>Afirmação Avaliada</th><th>Sim</th><th>Parcial</th><th>Não</th></tr></thead><tbody>"
+    # --- Tabela de avaliação ---
+    html += "<table><thead><tr><th>Afirmação Avaliada</th><th>Sim</th><th>Parcialmente</th><th>Não</th></tr></thead><tbody>"
     for criterio in criterios:
-        html += f"<tr><td>{criterio}</td><td>{descricao_criterios[criterio]}</td>"
-        html += f"<td class='sim'>{'☑' if avaliacoes[criterio]=='Sim' else '☐'}</td>"
-        html += f"<td class='parcial'>{'☑' if avaliacoes[criterio]=='Parcial' else '☐'}</td>"
-        html += f"<td class='nao'>{'☑' if avaliacoes[criterio]=='Não' else '☐'}</td></tr>"
+        html += f"<tr><td>{descricao_criterios[criterio]}</td>"
+        html += f"<td style='background-color: {'#b3f0b3' if avaliacoes[criterio]=='Sim' else '#ffffff'}; font-size: 26px;'>{'☑' if avaliacoes[criterio]=='Sim' else '☐'}</td>"
+        html += f"<td style='background-color: {'#ffd699' if avaliacoes[criterio]=='Parcialmente' else '#ffffff'}; font-size: 26px;'>{'☑' if avaliacoes[criterio]=='Parcialmente' else '☐'}</td>"
+        html += f"<td style='background-color: {'#ff9999' if avaliacoes[criterio]=='Não' else '#ffffff'}; font-size: 26px;'>{'☑' if avaliacoes[criterio]=='Não' else '☐'}</td></tr>"
     html += "</tbody></table>"
 
     html += f'<div class="recommendation">Recomendação Final: <strong>{resultado}</strong></div>'
 
-    # --- Orientações finais apenas se aprovado ---
+    # --- Orientações finais se aprovado ---
     if resultado=="APROVADO":
         html += f"""
 <div class="instructions">
@@ -119,11 +113,8 @@ Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da 
 </div>
 """
 
+    # --- Fechamento da página sem rodapé ---
     html += """
-<footer>
-Comissão Organizadora – VII SEMPI<br>
-📩 submissoes.sempi@gmail.com
-</footer>
 </div>
 </body>
 </html>
