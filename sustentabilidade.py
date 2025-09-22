@@ -9,6 +9,7 @@ st.header("Informações principais")
 resultado = st.selectbox("Resultado do artigo:", ["APROVADO", "REPROVADO"])
 revista1 = st.text_input("Nome da primeira revista parceira:", "Revista Meio Ambiente e Sustentabilidade")
 revista2 = st.text_input("Nome da segunda revista parceira:", "Revista Sustentabilidade e Sociedade")
+revista_final = st.text_input("Nome da revista para substituir 'nas revistas parceiras':", "")
 link_revista = st.text_input("Link de cadastro no sistema da revista:", 
                              "https://www.revistasuninter.com/revistameioambiente/index.php/meioAmbiente/login")
 
@@ -44,6 +45,8 @@ revista_editor = st.selectbox("Selecione a revista para o comentário ao editor:
 
 # --- Botão para gerar HTML ---
 if st.button("Gerar HTML"):
+    publicacao_texto = revista_final if (resultado=="APROVADO" and revista_final.strip() != "") else ("nas revistas parceiras" if resultado=="APROVADO" else "o resumo expandido será publicado nos anais do evento")
+
     html = f"""<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -75,7 +78,7 @@ td:first-child {{ text-align: justify; }}
 <p>Prezados(as) autores(as),</p>
 <p>É com satisfação que comunicamos o <strong>resultado final</strong> da avaliação do artigo submetido à 
 VII Semana Acadêmica da Propriedade Intelectual (SEMPI). 
-Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação {"nas revistas parceiras" if resultado=="APROVADO" else "o resumo expandido será publicado nos anais do evento"}.</p>
+Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação {publicacao_texto}.</p>
 """
 
     # --- Tabela de avaliação ---
@@ -113,7 +116,7 @@ Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da 
 </div>
 """
 
-    # --- Fechamento da página sem rodapé ---
+    # --- Fechamento sem rodapé ---
     html += """
 </div>
 </body>
