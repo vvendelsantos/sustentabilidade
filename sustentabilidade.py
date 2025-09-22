@@ -2,7 +2,6 @@ import streamlit as st
 
 # --- Configuração da página ---
 st.set_page_config(page_title="Gerador de HTML SEMPI", layout="wide")
-
 st.title("Gerador de HTML - Avaliação Final SEMPI")
 
 # --- Campos do formulário ---
@@ -24,6 +23,17 @@ criterios = [
     "Sugestões dos avaliadores"
 ]
 
+# Descrições detalhadas
+descricao_criterios = {
+    "Embasamento teórico": "O artigo apresenta fundamentação teórica adequada e atualizada, apoiando os argumentos e hipóteses.",
+    "Metodologia": "Os métodos utilizados estão descritos de forma clara, completa e replicável.",
+    "Resultados e discussão": "Os resultados são apresentados de forma organizada e a discussão é coerente com os objetivos do estudo.",
+    "Adequação ao template": "O artigo segue corretamente o template exigido pela revista parceira.",
+    "Revisão linguística": "O texto está livre de erros ortográficos e gramaticais significativos.",
+    "Relatório de similaridade": "O índice de similaridade é inferior a 10% e não apresenta trechos problemáticos.",
+    "Sugestões dos avaliadores": "As sugestões de ajustes indicadas na etapa anterior foram devidamente atendidas."
+}
+
 avaliacoes = {}
 for criterio in criterios:
     avaliacoes[criterio] = st.radio(f"{criterio}:", ["Sim", "Parcial", "Não"], index=0, horizontal=True)
@@ -34,7 +44,6 @@ revista_editor = st.selectbox("Selecione a revista para o comentário ao editor:
 
 # --- Botão para gerar HTML ---
 if st.button("Gerar HTML"):
-    # --- Construção do HTML ---
     html = f"""<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -51,6 +60,9 @@ table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
 th, td {{ border: 1px solid #c6e7c3; padding: 12px; text-align: center; }}
 th {{ background-color: #dff4df; color: #0f3c1d; font-weight: bold; }}
 td:first-child, td:nth-child(2) {{ text-align: left; }}
+.sim {{ color: green; font-weight: bold; font-size: 18px; }}
+.parcial {{ color: orange; font-weight: bold; font-size: 18px; }}
+.nao {{ color: red; font-weight: bold; font-size: 18px; }}
 .recommendation {{ background-color: #dff4df; border: 2px solid #94d194; border-radius: 12px; text-align: center; padding: 20px; margin-top: 30px; font-size: 20px; font-weight: bold; color: #0f3c1d; }}
 .instructions {{ margin-top: 30px; background-color: #f5faf5; border-left: 4px solid #94d194; padding: 20px; }}
 .instructions h2 {{ font-size: 18px; color: #0f3c1d; margin-top: 0; }}
@@ -72,16 +84,15 @@ VII Semana Acadêmica da Propriedade Intelectual (SEMPI).
 Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação {"nas revistas parceiras" if resultado=="APROVADO" else "o resumo expandido será publicado nos anais do evento"}.</p>
 """
 
-    # --- Tabela de critérios ---
+    # --- Tabela de critérios com cores ---
     html += "<table><thead><tr><th>Critério</th><th>Afirmação Avaliada</th><th>Sim</th><th>Parcial</th><th>Não</th></tr></thead><tbody>"
     for criterio in criterios:
-        sim = "☑" if avaliacoes[criterio]=="Sim" else "☐"
-        parcial = "☑" if avaliacoes[criterio]=="Parcial" else "☐"
-        nao = "☑" if avaliacoes[criterio]=="Não" else "☐"
-        html += f"<tr><td>{criterio}</td><td>{criterio}</td><td>{sim}</td><td>{parcial}</td><td>{nao}</td></tr>"
+        html += f"<tr><td>{criterio}</td><td>{descricao_criterios[criterio]}</td>"
+        html += f"<td class='sim'>{'☑' if avaliacoes[criterio]=='Sim' else '☐'}</td>"
+        html += f"<td class='parcial'>{'☑' if avaliacoes[criterio]=='Parcial' else '☐'}</td>"
+        html += f"<td class='nao'>{'☑' if avaliacoes[criterio]=='Não' else '☐'}</td></tr>"
     html += "</tbody></table>"
 
-    # --- Recomendação ---
     html += f'<div class="recommendation">Recomendação Final: <strong>{resultado}</strong></div>'
 
     # --- Orientações finais apenas se aprovado ---
@@ -95,16 +106,16 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
 <li>Cadastre-se no sistema da revista, caso ainda não o tenha feito: <a href="{link_revista}" target="_blank">{link_revista}</a></li>
 <li>Acesse o menu de submissão. Lembre-se de cadastrar todos os autores no sistema.</li>
 <li>No campo "Comentários ao editor", insira o seguinte texto:<br><br>
-<em class="highlight-note"><strong>
-Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico e recebeu autorização para submissão na {revista_editor} em 26/09/2025, com o código de permissão {codigo_permissao}.
-</strong></em>
+<em>
+Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico e recebeu autorização para submissão na {revista_editor} em 26/09/2025, com o código de permissão <strong>{codigo_permissao}</strong>.
+</em>
 </li>
 <li>Não é necessário anexar o relatório de similaridade (plágio); a Comissão Organizadora se encarregará de enviá-lo diretamente ao editor-chefe.</li>
 <li>Revise todos os dados antes de finalizar a submissão. A Comissão Organizadora não se responsabiliza por uma possível rejeição do artigo por parte do editor-chefe.</li>
 </ol>
 </div>
 """
-    # --- Texto de finalização ---
+
     html += """
 <div class="footer-text">
 <p>Agradecemos pela participação no evento e esperamos contar com sua presença na próxima edição.</p>
@@ -118,9 +129,6 @@ Comissão Organizadora – VII SEMPI<br>
 </html>
 """
 
-    # --- Exibir o HTML no Streamlit ---
     st.subheader("HTML Gerado")
     st.code(html, language="html")
-    
-    # --- Botão para baixar ---
     st.download_button("Baixar HTML", html, file_name="resultado_final.html", mime="text/html")
