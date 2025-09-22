@@ -1,136 +1,126 @@
-# =================================================================================
-# Documentação Completa do Código
-# =================================================================================
-
-# Este script cria um painel interativo de gráficos usando a biblioteca Streamlit.
-# Ele utiliza pandas para a manipulação de dados e plotly.express para a visualização dos gráficos.
-# Os dados são criados diretamente no script, mas podem ser facilmente substituídos
-# por dados carregados de um arquivo (por exemplo, CSV, Excel, etc.).
-
-# ---------------------------------------------------------------------------------
-# 1. Importar as bibliotecas necessárias
-# ---------------------------------------------------------------------------------
 import streamlit as st
-import pandas as pd
-import plotly.express as px
 
-# ---------------------------------------------------------------------------------
-# 2. Configuração da página do Streamlit
-# ---------------------------------------------------------------------------------
-# Define o título da página e o layout. O layout 'wide' utiliza toda a largura da tela.
-st.set_page_config(page_title="Painel de Análise de Dados", layout="wide")
+# --- Configuração da página ---
+st.set_page_config(page_title="Gerador de HTML SEMPI", layout="wide")
 
-# =================================================================================
-# 3. Preparação dos dados
-# =================================================================================
-# Criamos DataFrames do pandas a partir dos dados fornecidos nas imagens.
-# A coluna 'N' foi renomeada para 'Contagem' para ser mais descritiva.
+st.title("Gerador de HTML - Avaliação Final SEMPI")
 
-# Dados para o gráfico de Países
-data_paises = {
-    'País': ['BR', 'US', 'EP', 'CN', 'JP', 'NO', 'ES', 'KR'],
-    'Contagem': [187, 34, 5, 4, 3, 2, 1, 1]
-}
-df_paises = pd.DataFrame(data_paises)
+# --- Campos do formulário ---
+st.header("Informações principais")
+resultado = st.selectbox("Resultado do artigo:", ["APROVADO", "REPROVADO"])
+revista1 = st.text_input("Nome da primeira revista parceira:", "Revista Meio Ambiente e Sustentabilidade")
+revista2 = st.text_input("Nome da segunda revista parceira:", "Revista Sustentabilidade e Sociedade")
+link_revista = st.text_input("Link de cadastro no sistema da revista:", 
+                             "https://www.revistasuninter.com/revistameioambiente/index.php/meioAmbiente/login")
 
-# Dados para o gráfico de Titulares
-data_titulares = {
-    'Titular': ['PETROLEO BRASILEIRO S.A.', 'JOAO BATISTA MAGLIA', 'INSTITUTO PRESBITERIANO MACKENZIE', 'UNICAMP', 'UNIV MINAS GERAIS'],
-    'Contagem': [13, 6, 4, 3, 3]
-}
-df_titulares = pd.DataFrame(data_titulares)
+st.header("Avaliação dos critérios")
+criterios = [
+    "Embasamento teórico",
+    "Metodologia",
+    "Resultados e discussão",
+    "Adequação ao template",
+    "Revisão linguística",
+    "Relatório de similaridade",
+    "Sugestões dos avaliadores"
+]
 
-# Dados para o gráfico de Códigos IPC
-data_ipc = {
-    'Código IPC': ['C02F1/44', 'A01K61/00', 'C02F9/00', 'F03B13/14', 'C02F1/32'],
-    'Contagem': [7, 6, 6, 5, 5]
-}
-df_ipc = pd.DataFrame(data_ipc)
+avaliacoes = {}
+for criterio in criterios:
+    avaliacoes[criterio] = st.radio(f"{criterio}:", ["Sim", "Parcial", "Não"], index=0, horizontal=True)
 
-# Dados para o gráfico de Anos
-data_anos = {
-    'Ano': [1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
-    'Contagem': [2, 2, 3, 1, 4, 4, 5, 3, 2, 1, 2, 4, 9, 1, 1, 1, 5, 18, 19, 15, 28, 26, 18, 2, 9, 1, 4, 10, 3, 4, 2, 3, 3, 8, 10, 3, 1]
-}
-df_anos = pd.DataFrame(data_anos)
+st.header("Comentário ao editor")
+codigo_permissao = st.text_input("Código de permissão:", "XXXXX")
+revista_editor = st.selectbox("Selecione a revista para o comentário ao editor:", [revista1, revista2])
 
-# =================================================================================
-# 4. Criação dos Gráficos com Plotly Express
-# =================================================================================
-# Os gráficos agora têm fundo branco e usam a cor #71B1B3.
+# --- Botão para gerar HTML ---
+if st.button("Gerar HTML"):
+    # --- Construção do HTML ---
+    html = f"""<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Avaliação do Artigo – Resultado Final</title>
+<style>
+body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eaf6ea; margin: 0; padding: 20px; color: #1c3d25; }}
+.container {{ max-width: 900px; margin: 0 auto; background-color: #ffffff; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }}
+.header {{ background-color: #c6e7c3; padding: 20px 30px; border-bottom: 3px solid #94d194; text-align: center; }}
+.header h1 {{ margin: 0; font-size: 22px; color: #0f3c1d; }}
+.content {{ padding: 30px; line-height: 1.65; }}
+table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
+th, td {{ border: 1px solid #c6e7c3; padding: 12px; text-align: center; }}
+th {{ background-color: #dff4df; color: #0f3c1d; font-weight: bold; }}
+td:first-child, td:nth-child(2) {{ text-align: left; }}
+.recommendation {{ background-color: #dff4df; border: 2px solid #94d194; border-radius: 12px; text-align: center; padding: 20px; margin-top: 30px; font-size: 20px; font-weight: bold; color: #0f3c1d; }}
+.instructions {{ margin-top: 30px; background-color: #f5faf5; border-left: 4px solid #94d194; padding: 20px; }}
+.instructions h2 {{ font-size: 18px; color: #0f3c1d; margin-top: 0; }}
+.instructions ol {{ padding-left: 20px; }}
+.highlight-note {{ display: block; margin-bottom: 15px; }}
+.footer-text {{ margin-top: 20px; font-style: italic; }}
+footer {{ padding: 20px 30px; text-align: center; font-size: 13px; color: #5a795f; }}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Resultado Final da Avaliação do Artigo</h1>
+</div>
+<div class="content">
+<p>Prezados(as) autores(as),</p>
+<p>É com satisfação que comunicamos o <strong>resultado final</strong> da avaliação do artigo submetido à 
+VII Semana Acadêmica da Propriedade Intelectual (SEMPI). 
+Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação {"nas revistas parceiras" if resultado=="APROVADO" else "o resumo expandido será publicado nos anais do evento"}.</p>
+"""
 
-# Gráfico de barras para Países
-fig_paises = px.bar(df_paises,
-                    x='País',
-                    y='Contagem',
-                    title='Distribuição por País',
-                    color_discrete_sequence=['#71B1B3'])
-fig_paises.update_layout(paper_bgcolor='white', plot_bgcolor='white')
+    # --- Tabela de critérios ---
+    html += "<table><thead><tr><th>Critério</th><th>Afirmação Avaliada</th><th>Sim</th><th>Parcial</th><th>Não</th></tr></thead><tbody>"
+    for criterio in criterios:
+        sim = "☑" if avaliacoes[criterio]=="Sim" else "☐"
+        parcial = "☑" if avaliacoes[criterio]=="Parcial" else "☐"
+        nao = "☑" if avaliacoes[criterio]=="Não" else "☐"
+        html += f"<tr><td>{criterio}</td><td>{criterio}</td><td>{sim}</td><td>{parcial}</td><td>{nao}</td></tr>"
+    html += "</tbody></table>"
 
-# Gráfico de barras para Titulares
-fig_titulares = px.bar(df_titulares,
-                       x='Titular',
-                       y='Contagem',
-                       title='Distribuição por Titular',
-                       color_discrete_sequence=['#71B1B3'])
-fig_titulares.update_traces(text=df_titulares['Titular'])
-fig_titulares.update_layout(xaxis_title='Titular',
-                            showlegend=False,
-                            paper_bgcolor='white',
-                            plot_bgcolor='white')
+    # --- Recomendação ---
+    html += f'<div class="recommendation">Recomendação Final: <strong>{resultado}</strong></div>'
 
-# Gráfico de barras para Códigos IPC
-fig_ipc = px.bar(df_ipc,
-                 x='Código IPC',
-                 y='Contagem',
-                 title='Distribuição por Código IPC',
-                 color_discrete_sequence=['#71B1B3'])
-fig_ipc.update_layout(paper_bgcolor='white', plot_bgcolor='white')
+    # --- Orientações finais apenas se aprovado ---
+    if resultado=="APROVADO":
+        html += f"""
+<div class="instructions">
+<h2>Orientações para Submissão</h2>
+<ol>
+<li>Certifique-se de enviar a versão final do trabalho. Alterações substanciais no conteúdo, bem como a inclusão ou exclusão de autores, não são permitidas.</li>
+<li>Submeta o artigo no sistema da revista até o dia <strong>30/09/2025</strong>.</li>
+<li>Cadastre-se no sistema da revista, caso ainda não o tenha feito: <a href="{link_revista}" target="_blank">{link_revista}</a></li>
+<li>Acesse o menu de submissão. Lembre-se de cadastrar todos os autores no sistema.</li>
+<li>No campo "Comentários ao editor", insira o seguinte texto:<br><br>
+<em class="highlight-note"><strong>
+Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico e recebeu autorização para submissão na {revista_editor} em 26/09/2025, com o código de permissão {codigo_permissao}.
+</strong></em>
+</li>
+<li>Não é necessário anexar o relatório de similaridade (plágio); a Comissão Organizadora se encarregará de enviá-lo diretamente ao editor-chefe.</li>
+<li>Revise todos os dados antes de finalizar a submissão. A Comissão Organizadora não se responsabiliza por uma possível rejeição do artigo por parte do editor-chefe.</li>
+</ol>
+</div>
+"""
+    # --- Texto de finalização ---
+    html += """
+<div class="footer-text">
+<p>Agradecemos pela participação no evento e esperamos contar com sua presença na próxima edição.</p>
+</div>
+<footer>
+Comissão Organizadora – VII SEMPI<br>
+📩 submissoes.sempi@gmail.com
+</footer>
+</div>
+</body>
+</html>
+"""
 
-# Gráfico de linha para Anos (evolução ao longo do tempo)
-fig_anos = px.line(df_anos,
-                   x='Ano',
-                   y='Contagem',
-                   title='Evolução ao Longo do Tempo (Anos)',
-                   markers=True)
-fig_anos.update_traces(line_color='#71B1B3')
-fig_anos.update_layout(paper_bgcolor='white', plot_bgcolor='white')
-
-
-# =================================================================================
-# 5. Criar o layout do painel (Dashboard)
-# =================================================================================
-
-# Título principal do painel
-st.title("Painel de Gráficos de Dados")
-st.markdown("Este painel exibe visualizações interativas de diferentes conjuntos de dados.")
-
-# Utiliza colunas para dispor os gráficos lado a lado
-col1, col2 = st.columns(2)
-
-# Exibe o primeiro e o segundo gráfico na primeira coluna
-with col1:
-    st.header("Gráfico 1: Países")
-    st.plotly_chart(fig_paises, use_container_width=True)
-
-    st.header("Gráfico 2: Códigos IPC")
-    st.plotly_chart(fig_ipc, use_container_width=True)
-
-# Exibe o terceiro e o quarto gráfico na segunda coluna
-with col2:
-    st.header("Gráfico 3: Titulares")
-    st.plotly_chart(fig_titulares, use_container_width=True)
-
-    st.header("Gráfico 4: Evolução Temporal")
-    st.plotly_chart(fig_anos, use_container_width=True)
-
-# ---------------------------------------------------------------------------------
-# 6. Instruções de Implementação
-# ---------------------------------------------------------------------------------
-# Para executar este código, salve-o como um arquivo .py (por exemplo, app.py).
-# Em seguida, abra o terminal na mesma pasta e execute o comando:
-# streamlit run app.py
-#
-# Isso iniciará um servidor web local e abrirá o painel no seu navegador padrão.
-# Você pode interagir com os gráficos (zoom, pan, hover) diretamente no painel.
-# =================================================================================
+    # --- Exibir o HTML no Streamlit ---
+    st.subheader("HTML Gerado")
+    st.code(html, language="html")
+    
+    # --- Botão para baixar ---
+    st.download_button("Baixar HTML", html, file_name="resultado_final.html", mime="text/html")
