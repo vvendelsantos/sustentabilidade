@@ -14,7 +14,7 @@ link_revista = st.text_input("Link de cadastro no sistema da revista:",
 st.header("Avaliação dos critérios")
 criterios = [
     "Embasamento teórico",
-    "Metodologia",
+    "Métodos",
     "Resultados e discussão",
     "Adequação ao template",
     "Revisão linguística",
@@ -25,12 +25,12 @@ criterios = [
 # Descrições detalhadas
 descricao_criterios = {
     "Embasamento teórico": "O artigo apresenta embasamento teórico adequado e atualizado, apoiando os argumentos e hipóteses.",
-    "Metodologia": "Os métodos utilizados estão descritos de forma clara, confiável e replicável.",
+    "Métodos": "Os métodos utilizados estão descritos de forma clara, confiável e replicável.",
     "Resultados e discussão": "Os resultados são apresentados de forma organizada e a discussão é coerente com os objetivos do estudo.",
     "Adequação ao template": "O artigo segue corretamente o template exigido pela revista parceira.",
     "Revisão linguística": "O texto está livre de erros ortográficos e gramaticais significativos.",
     "Relatório de similaridade": "O índice de similaridade é inferior a 10% e não apresenta trechos problemáticos.",
-    "Sugestões dos avaliadores": "As sugestões de ajustes indicadas na etapa anterior foram devidamente atendidas."
+    "Sugestões dos avaliadores": "As sugestões de ajustes indicadas no resumo expandido foram devidamente atendidas."
 }
 
 avaliacoes = {}
@@ -80,7 +80,7 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
 """
 
     # --- Tabela de avaliação ---
-    html += "<table><thead><tr><th>Afirmação Avaliada</th><th>Sim</th><th>Parcialmente</th><th>Não</th></tr></thead><tbody>"
+    html += "<table><thead><tr><th>Afirmação</th><th>Sim</th><th>Parcialmente</th><th>Não</th></tr></thead><tbody>"
     for criterio in criterios:
         html += f"<tr><td>{descricao_criterios[criterio]}</td>"
         html += f"<td style='background-color: {'#b3f0b3' if avaliacoes[criterio]=='Sim' else '#ffffff'}; font-size: 26px;'>{'☑' if avaliacoes[criterio]=='Sim' else '☐'}</td>"
