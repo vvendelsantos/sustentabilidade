@@ -96,7 +96,7 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
     if resultado=="APROVADO":
         html += f"""
 <div class="instructions">
-<h2>Orientações para Submissão</h2>
+<h2>Orientações para submissão</h2>
 <ol>
 <li>Cadastre-se no sistema da revista, caso ainda não o tenha feito: <a href="{link_revista}" target="_blank">{link_revista}</a></li>
 <li>O artigo submetido deve corresponder integralmente à versão final aprovada pelo Comitê Científico do evento. O editor-chefe verificará a conformidade entre ambas as versões e, caso sejam identificadas inconsistências de conteúdo ou autoria, o manuscrito será imediatamente rejeitado.</li>
@@ -112,7 +112,7 @@ Este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectua
 </li>
 <li>Não é necessário anexar o relatório de similaridade (plágio). A Comissão Organizadora se encarregará de enviá-lo diretamente ao editor-chefe.</li>
 <li>A submissão deve ser concluída imprescindivelmente até <strong>30/09/2025</strong>. Revise todos os dados antes de finalizar a submissão.</li>
-<li>O acompanhamento pós-submissão é de responsabilidade exclusiva do autor principal, via sistema da revista. A Comissão Organizadora não tem acesso ou competência para intervir no processo editorial.</li>
+<li>O acompanhamento pós-submissão é de responsabilidade exclusiva do autor principal, via sistema da revista.</li>
 <li>A Comissão Organizadora não se responsabilizará por eventual rejeição do artigo, competindo ao editor-chefe toda e qualquer deliberação final. Dúvidas ou recursos sobre tal decisão deverão ser dirigidos exclusivamente ao editor-chefe.</li>
 </ol>
 </div>
