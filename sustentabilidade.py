@@ -112,6 +112,7 @@ Este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectua
 </li>
 <li>Não é necessário anexar o relatório de similaridade (plágio). A Comissão Organizadora se encarregará de enviá-lo diretamente ao editor-chefe.</li>
 <li>A submissão deve ser concluída imprescindivelmente até <strong>30/09/2025</strong>. Revise todos os dados antes de finalizar a submissão.</li>
+<li>O acompanhamento pós-submissão é de responsabilidade exclusiva do autor principal, via sistema da revista. A Comissão Organizadora não tem acesso ou competência para intervir no processo editorial.</li>
 <li>A Comissão Organizadora não se responsabilizará por eventual rejeição do artigo, competindo ao editor-chefe toda e qualquer deliberação final. Dúvidas ou recursos sobre tal decisão deverão ser dirigidos exclusivamente ao editor-chefe.</li>
 </ol>
 </div>
