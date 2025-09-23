@@ -98,20 +98,21 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
 <div class="instructions">
 <h2>Orientações para Submissão</h2>
 <ol>
-<li>Certifique-se de enviar a versão final do trabalho. Alterações substanciais no conteúdo, bem como a inclusão ou exclusão de autores, não são permitidas.</li>
-<li>Submeta o artigo no sistema da revista até o dia <strong>30/09/2025</strong>.</li>
 <li>Cadastre-se no sistema da revista, caso ainda não o tenha feito: <a href="{link_revista}" target="_blank">{link_revista}</a></li>
-<li>Acesse o menu de submissão. Lembre-se de cadastrar todos os autores no sistema.</li>
-<li>No campo "Comentários ao editor", insira o seguinte texto:<br><br>
+<li>Certifique-se de enviar a versão final do trabalho. Não serão permitidas alterações substanciais no conteúdo, inclusão ou exclusão de autores.</li>
+<li>Acesse o menu de submissão no sistema do periódico. Lembre-se de cadastrar todos os autores no sistema na ordem em que aparecem no artigo.</li>
+<li>No campo específico "Comentários ao editor", insira, obrigatoriamente, o texto abaixo:<br><br>
 <p style="text-align: justify;">
 <em>
-Prezado editor-chefe, este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico e recebeu autorização para submissão na <strong>{revista_editor}</strong> em 26/09/2025, com o código de permissão <strong>{codigo_permissao}</strong>.
+Prezado editor-chefe,
+Este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico do evento e autorizado para submissão à <strong>{revista_editor}</strong> em 26/09/2025, sob o código de permissão <strong>{codigo_permissao}</strong>.
 </em>
 </p>
 <br>
 </li>
-<li>Não é necessário anexar o relatório de similaridade (plágio); a Comissão Organizadora se encarregará de enviá-lo diretamente ao editor-chefe.</li>
-<li>Revise todos os dados antes de finalizar a submissão. A Comissão Organizadora não se responsabiliza por uma possível rejeição do artigo por parte do editor-chefe.</li>
+<li>Não é necessário anexar o relatório de similaridade (plágio). A Comissão Organizadora se encarregará de enviá-lo diretamente ao editor-chefe.</li>
+<li>A submissão deve ser concluída imprescindivelmente até <strong>30/09/2025</strong>. Revise todos os dados antes de finalizar a submissão.</li>
+<li>A Comissão Organizadora não se responsabilizará por eventual rejeição do artigo, competindo ao editor-chefe toda e qualquer deliberação final. Dúvidas ou recursos sobre tal decisão deverão ser dirigidos exclusivamente ao editor-chefe.</li>
 </ol>
 </div>
 """
