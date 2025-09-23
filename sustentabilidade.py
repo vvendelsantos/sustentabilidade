@@ -99,7 +99,7 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
 <h2>Orientações para Submissão</h2>
 <ol>
 <li>Cadastre-se no sistema da revista, caso ainda não o tenha feito: <a href="{link_revista}" target="_blank">{link_revista}</a></li>
-<li>Certifique-se de enviar a versão final do trabalho. Não serão permitidas alterações substanciais no conteúdo, inclusão ou exclusão de autores.</li>
+<li>O artigo submetido deve corresponder integralmente à versão final aprovada pelo Comitê Científico do evento. O editor-chefe verificará a conformidade entre ambas as versões e, caso sejam identificadas inconsistências de conteúdo ou autoria, o manuscrito será imediatamente rejeitado.</li>
 <li>Acesse o menu de submissão no sistema do periódico. Lembre-se de cadastrar todos os autores no sistema na ordem em que aparecem no artigo.</li>
 <li>No campo específico "Comentários ao editor", insira, obrigatoriamente, o texto abaixo:<br><br>
 <p style="text-align: justify;">
