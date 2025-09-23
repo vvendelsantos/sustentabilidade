@@ -16,21 +16,23 @@ criterios = [
     "Embasamento teórico",
     "Métodos",
     "Resultados e discussão",
-    "Adequação ao template",
+    "Adequação às diretrizes",
     "Revisão linguística",
     "Relatório de similaridade",
-    "Sugestões dos avaliadores"
+    "Sugestões dos avaliadores",
+    "Contribuição à literatura"
 ]
 
 # Descrições detalhadas
 descricao_criterios = {
-    "Embasamento teórico": "O artigo apresenta embasamento teórico adequado e atualizado, apoiando os argumentos e hipóteses.",
-    "Métodos": "Os métodos utilizados estão descritos de forma clara, confiável e replicável.",
-    "Resultados e discussão": "Os resultados são apresentados de forma organizada e a discussão é coerente com os objetivos do estudo.",
-    "Adequação ao template": "O artigo segue corretamente o template exigido pela revista parceira.",
-    "Revisão linguística": "O texto está livre de erros ortográficos e gramaticais significativos.",
-    "Relatório de similaridade": "O índice de similaridade é inferior a 10% e não apresenta trechos problemáticos.",
-    "Sugestões dos avaliadores": "As sugestões de ajustes indicadas no resumo expandido foram devidamente atendidas."
+    "Embasamento teórico": "A argumentação do artigo é sustentada por um embasamento teórico adequado e atualizado.",
+    "Métodos": "Os métodos empregados encontram-se detalhados com clareza, conferindo robustez e permitindo a replicabilidade do estudo.",
+    "Resultados e discussão": "A exposição dos resultados é clara e organizada, conduzindo a uma discussão pertinente e alinhada com os objetivos do estudo.",
+    "Adequação às diretrizes": "O artigo está em conformidade com as normas exigidas pela revista parceira.",
+    "Revisão linguística": "O texto está livre de quaisquer erros ortográficos, gramaticais ou de digitação.",
+    "Relatório de similaridade": "O artigo está em conformidade com os padrões de originalidade, com índice de similaridade abaixo de 10% e nenhum trecho problemático identificado.",
+    "Sugestões dos avaliadores": "Os aprimoramentos sugeridos no resumo expandido foram devidamente contemplados na versão final.",
+    "Contribuição à literatura": "O estudo apresenta originalidade e/ou relevância significativa para a área, avançando o conhecimento existente ou oferecendo uma perspectiva inovadora sobre o tema."
 }
 
 avaliacoes = {}
