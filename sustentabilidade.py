@@ -70,7 +70,7 @@ td:first-child {{ text-align: justify; }}
 <body>
 <div class="container">
 <div class="header">
-<h1>Resultado Final da Avaliação do Artigo</h1>
+<h1>Resultado Final</h1>
 </div>
 <div class="content">
 <p>Prezados(as) autores(as),</p>
