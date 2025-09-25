@@ -105,7 +105,7 @@ Após análise criteriosa do Comitê Científico, informamos que o trabalho {"fo
 <p style="text-align: justify;">
 <em>
 Prezado editor-chefe,
-Este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico do evento e autorizado para submissão à <strong>{revista_editor}</strong> em 26/09/2025, sob o código de permissão <strong>{codigo_permissao}</strong>.
+Este trabalho foi apresentado na VII Semana Acadêmica da Propriedade Intelectual (SEMPI), aprovado pelo Comitê Científico do evento e autorizado para submissão à <strong>{revista_editor}</strong> em 26/09/2025, sob o código de permissão <strong>{codigo_permissao}</strong>. Informo que o trabalho não será publicado nos Anais do evento e não se encontra em processo de avaliação em outro periódico.
 </em>
 </p>
 <br>
