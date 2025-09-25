@@ -78,7 +78,7 @@ td:first-child {{ text-align: justify; }}
 <p>Prezados(as) autores(as),</p>
 <p>É com satisfação que comunicamos o <strong>resultado final</strong> da avaliação do artigo submetido à 
 VII Semana Acadêmica da Propriedade Intelectual (SEMPI). 
-Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "<strong>REPROVADO</strong>"} para publicação na <strong>{publicacao_texto}</strong>.</p>
+Após análise criteriosa do Comitê Científico, informamos que o trabalho {"foi <strong>APROVADO</strong>" if resultado=="APROVADO" else "foi <strong>REPROVADO</strong>"} para publicação na <strong>{publicacao_texto}</strong>.</p>
 """
 
     # --- Tabela de avaliação ---
